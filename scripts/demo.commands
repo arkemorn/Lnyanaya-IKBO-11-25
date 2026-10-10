@@ -1,0 +1,10 @@
+# Список файлов в корне
+ls
+# Посмотреть содержимое файла
+tail notes.txt
+uname
+du
+conf-dump
+cp notes.txt notes-copy.txt
+mv notes-copy.txt notes-final.txt
+ls
