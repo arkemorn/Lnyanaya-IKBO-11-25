@@ -3,5 +3,14 @@ __pycache__/
 .venv/
 venv/
 .pytest_cache/
+.mypy_cache/
+.pyright_cache/
+.ruff_cache/
 .coverage
 .DS_Store
+*.zip
+*.egg-info/
+build/
+dist/
+.idea/
+.vscode/
