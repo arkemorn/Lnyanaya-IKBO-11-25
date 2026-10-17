@@ -6,9 +6,12 @@ set "ARCHIVE=%TEMP%\vfs-shell-errors-%RANDOM%.zip"
 python scripts\create_demo_vfs.py --profile nested --output "%ARCHIVE%"
 if errorlevel 1 (
     del "%ARCHIVE%" >nul 2>nul
+    pause
     exit /b 1
 )
 python -m src.cli --vfs "%ARCHIVE%" --script scripts\demo-errors.commands
 set "RESULT=%ERRORLEVEL%"
 del "%ARCHIVE%" >nul 2>nul
+echo.
+pause
 exit /b %RESULT%
