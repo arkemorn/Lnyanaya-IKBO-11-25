@@ -160,6 +160,16 @@ class VirtualFileSystem:
         source_node = self.resolve(source)
         if source_node is self.root:
             raise ShellError("нельзя скопировать корневой каталог")
+        source_parts = self._path_parts(source, self.cwd)
+        target_parts = self._copy_target_parts(
+            source_node, destination
+        )
+        if (
+            source_node.kind == DIRECTORY
+            and target_parts[:len(source_parts)] == source_parts
+        ):
+            raise ShellError("нельзя скопировать каталог внутрь самого себя")
+
         parent, name = self._copy_target(source_node, destination)
         if name in parent.children:
             raise ShellError(f"назначение уже существует: {destination}")
@@ -167,6 +177,17 @@ class VirtualFileSystem:
         cloned = copy.deepcopy(source_node)
         cloned.name = name
         parent.children[name] = cloned
+
+    def _copy_target_parts(self, source_node, destination):
+        """Возвращает полный путь целевого файла или каталога."""
+        parts = self._path_parts(destination, self.cwd)
+        try:
+            existing = self.resolve(destination)
+        except ShellError:
+            existing = None
+        if existing is not None and existing.kind == DIRECTORY:
+            return parts + (source_node.name,)
+        return parts
 
     def _copy_target(self, source_node, destination):
         """Определяет каталог и имя назначения для команды cp."""

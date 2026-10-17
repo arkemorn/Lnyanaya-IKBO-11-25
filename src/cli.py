@@ -30,6 +30,7 @@ def print_configuration(args):
     print("Параметры запуска:")
     print(f"vfs_path={vfs_path}")
     print(f"script_path={script_path}")
+    sys.stdout.flush()
 
 
 def execute_command(shell, line):
