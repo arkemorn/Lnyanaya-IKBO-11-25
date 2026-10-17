@@ -8,6 +8,7 @@
 
 - Python 3.10 или новее.
 - Дополнительные библиотеки не нужны.
+- Сборка не требуется.
 
 ## Запуск
 
@@ -57,6 +58,16 @@ run.bat --vfs path\to\files.zip --script scripts\demo.commands
 
 Парсер поддерживает аргументы в кавычках. Пути относятся к VFS, а не к
 файловой системе компьютера.
+
+## Пример работы
+
+```text
+user@files:~$ ls
+notes.txt
+user@files:~$ head -n 2 "notes with spaces.txt"
+user@files:~$ uniq notes.txt
+user@files:~$ exit
+```
 
 ## Демонстрационные сценарии
 
