@@ -181,7 +181,10 @@ class VirtualFileSystem:
         if not parts:
             return self.root, source_node.name
         parent_path = ROOT_PATH + "/".join(parts[:-1])
-        return self.resolve(parent_path), parts[-1]
+        parent = self.resolve(parent_path)
+        if parent.kind != DIRECTORY:
+            raise ShellError("родительский путь не является каталогом")
+        return parent, parts[-1]
 
 
 class Shell:
