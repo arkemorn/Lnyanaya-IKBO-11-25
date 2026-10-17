@@ -1,3 +1,3 @@
 @echo off
-cd /d %~dp0
-python src\gui.py %*
+cd /d "%~dp0"
+python -m src.cli %*

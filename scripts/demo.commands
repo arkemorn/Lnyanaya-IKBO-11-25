@@ -1,10 +1,9 @@
-# Список файлов в корне
+# Базовые команды варианта 18
 ls
-# Посмотреть содержимое файла
-tail notes.txt
+head -n 2 notes.txt
+uniq duplicates.txt
 uname
-du
-conf-dump
+cd /
 cp notes.txt notes-copy.txt
-mv notes-copy.txt notes-final.txt
-ls
+head notes-copy.txt
+exit

@@ -1,0 +1,6 @@
+# Ошибки команд и обработка аргументов в кавычках
+ls "missing folder"
+head missing.txt
+unknown-command
+ls
+exit

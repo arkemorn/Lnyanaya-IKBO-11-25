@@ -1,0 +1,9 @@
+# Работа с VFS с вложенностью не менее трёх уровней
+ls /docs
+cd /docs/guide
+head readme.txt
+uniq notes.txt
+cd /
+cp docs/guide/readme.txt readme-copy.txt
+head readme-copy.txt
+exit
