@@ -1,9 +1,9 @@
-# Работа с VFS с вложенностью не менее трёх уровней
+# Работа с VFS с тремя уровнями каталогов
 ls /docs
-cd /docs/guide
+cd /docs/guide/reference
 head readme.txt
 uniq notes.txt
 cd /
-cp docs/guide/readme.txt readme-copy.txt
+cp docs/guide/reference/readme.txt readme-copy.txt
 head readme-copy.txt
 exit

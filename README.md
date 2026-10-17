@@ -43,6 +43,10 @@ run.bat --vfs path\to\files.zip --script scripts\demo.commands
   Ошибки выводятся, после чего сценарий продолжает работу до `exit` или конца
   файла.
 
+Оба параметра необязательны. Без `--vfs` создаётся пустая система `memory`,
+без `--script` сразу начинается интерактивный ввод. Перед запуском всегда
+показываются значения обоих параметров.
+
 Архив загружается без распаковки. Поддерживаются каталоги любой вложенности
 и двоичные файлы. Команда `cp` меняет только дерево VFS в памяти.
 
@@ -53,36 +57,61 @@ run.bat --vfs path\to\files.zip --script scripts\demo.commands
 - `head [-n число] файл` — вывести первые 10 строк или указанное число строк.
 - `uniq файл` — убрать соседние одинаковые строки.
 - `uname` — вывести имя операционной системы хоста.
-- `cp источник назначение` — скопировать файл или каталог в VFS.
+- `cp источник назначение` — скопировать файл или каталог в VFS. Если
+  назначение уже занято, команда сообщает об ошибке и сохраняет исходные данные.
 - `exit` — завершить эмулятор.
 
-Парсер поддерживает аргументы в кавычках. Пути относятся к VFS, а не к
+Парсер поддерживает аргументы в кавычках. Пути команд относятся к VFS, а не к
 файловой системе компьютера.
 
-## Пример работы
+## Пример интерактивной работы
 
 ```text
+python3 scripts/create_demo_vfs.py --profile multiple --output files.zip
+./run.sh --vfs files.zip
+Параметры запуска:
+vfs_path=files.zip
+script_path=(не задан)
 user@files:~$ ls
+duplicates.txt
+notes with spaces.txt
 notes.txt
 user@files:~$ head -n 2 "notes with spaces.txt"
+first spaced line
+second spaced line
+user@files:~$ cp "notes with spaces.txt" "copy with spaces.txt"
+user@files:~$ head -n 1 "copy with spaces.txt"
+first spaced line
+user@files:~$ unknown-command
+ошибка: команда не найдена: unknown-command
 user@files:~$ uniq notes.txt
+Первая строка
+Вторая строка
+Третья строка
 user@files:~$ exit
+Выход из эмулятора
 ```
+
+Команда создания архива показана для POSIX-совместимого терминала. В Windows
+запустите аналогичный пример через `run.bat --vfs files.zip`.
 
 ## Демонстрационные сценарии
 
 Сценарии создают ZIP во временной папке, запускают эмулятор с обоими
-параметрами и удаляют архив после завершения:
+параметрами и удаляют архив после завершения. `demo-minimal` использует VFS с
+одним файлом, `demo` — VFS с несколькими файлами, `demo-nested` — каталоги
+`docs/guide/reference` с тремя уровнями вложенности, `demo-errors` показывает
+ошибки команд и обработку аргументов в кавычках:
 
 ```sh
+sh scripts/demo-minimal.sh
 sh scripts/demo.sh
 sh scripts/demo-nested.sh
 sh scripts/demo-errors.sh
 ```
 
-`demo-nested` использует каталоги глубиной не менее трёх уровней;
-`demo-errors` показывает ошибки команд и обработку аргументов в кавычках.
-В Windows доступны `scripts\demo.bat` и `scripts\demo-nested.bat`.
+В Windows доступны `scripts\demo-minimal.bat`, `scripts\demo.bat`,
+`scripts\demo-nested.bat` и `scripts\demo-errors.bat`.
 
 ## Тесты
 
@@ -97,3 +126,41 @@ python3 -m unittest discover -s tests -v
 - `tests/` — модульные тесты.
 - `scripts/` — демонстрационные сценарии и создание временных ZIP-архивов.
 - `run.sh`, `run.bat` — скрипты запуска.
+
+### Функции Python
+
+| Функция | Назначение |
+| --- | --- |
+| `cli.parse_args` | Разбирает `--vfs` и `--script`. |
+| `cli.print_configuration` | Печатает значения параметров запуска. |
+| `cli.load_vfs` | Создаёт пустую VFS или загружает ZIP. |
+| `cli.execute_command` | Выполняет команду и печатает результат. |
+| `cli.run_command` | Показывает строку сценария как ввод пользователя и запускает её. |
+| `cli.run_startup_script` | Читает команды сценария, пропускает пустые строки и комментарии. |
+| `cli.run_interactive` | Запускает цикл интерактивного ввода. |
+| `cli.main` | Связывает разбор параметров, загрузку VFS, сценарий и REPL. |
+| `Node.__init__` | Создаёт узел файла или каталога с данными и дочерними узлами. |
+| `VirtualFileSystem.__init__` | Создаёт пустое дерево VFS с корневым каталогом. |
+| `VirtualFileSystem.load_zip` | Загружает записи ZIP в память и задаёт имя VFS. |
+| `VirtualFileSystem._archive_parts` | Проверяет путь из ZIP на абсолютные и родительские компоненты. |
+| `VirtualFileSystem._ensure_directory` | Находит или создаёт цепочку каталогов при загрузке. |
+| `VirtualFileSystem._insert_archive_entry` | Добавляет файл или каталог архива в дерево VFS. |
+| `VirtualFileSystem._path_parts` | Нормализует абсолютный или относительный путь VFS. |
+| `VirtualFileSystem.resolve` | Находит узел VFS по пути. |
+| `VirtualFileSystem.list_dir` | Возвращает отсортированное содержимое каталога. |
+| `VirtualFileSystem.change_dir` | Проверяет и меняет текущий каталог. |
+| `VirtualFileSystem.read_lines` | Читает UTF-8 файл VFS как список строк. |
+| `VirtualFileSystem.copy` | Копирует файл или каталог внутри памяти, запрещает копирование каталога внутрь себя. |
+| `VirtualFileSystem._copy_target_parts` | Вычисляет целевой путь для проверки копирования каталога. |
+| `VirtualFileSystem._copy_target` | Определяет каталог-родитель и имя копии. |
+| `Shell.__init__` | Связывает имена команд с их обработчиками. |
+| `Shell.prompt` | Формирует приглашение с именем VFS и текущим каталогом. |
+| `Shell.execute` | Разбирает строку, обрабатывает кавычки и вызывает команду. |
+| `Shell._command_ls`, `Shell._command_cd` | Проверяют аргументы и выполняют `ls` и `cd`. |
+| `Shell._command_head`, `Shell._command_uniq` | Читают текстовые файлы и выполняют `head` и `uniq`. |
+| `Shell._command_uname` | Возвращает имя ОС хоста. |
+| `Shell._command_cp` | Проверяет аргументы и вызывает копирование в VFS. |
+| `Shell._command_exit` | Проверяет аргументы `exit` и завершает цикл REPL. |
+| `create_demo_vfs.parse_args` | Разбирает профиль (`minimal`, `multiple`, `nested`) и путь ZIP. |
+| `create_demo_vfs.create_archive` | Записывает выбранный набор файлов в ZIP. |
+| `create_demo_vfs.main` | Создаёт демонстрационный архив и возвращает код завершения. |

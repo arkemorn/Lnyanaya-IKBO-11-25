@@ -3,7 +3,7 @@ setlocal
 cd /d "%~dp0.."
 set "ARCHIVE=%TEMP%\vfs-shell-minimal-%RANDOM%.zip"
 
-python scripts\create_demo_vfs.py --profile minimal --output "%ARCHIVE%"
+python scripts\create_demo_vfs.py --profile multiple --output "%ARCHIVE%"
 if errorlevel 1 (
     del "%ARCHIVE%" >nul 2>nul
     exit /b 1

@@ -5,14 +5,26 @@ import zipfile
 
 MINIMAL_FILES = {
     "notes.txt": "Первая строка\nВторая строка\nТретья строка\n",
+}
+MULTIPLE_FILES = {
+    **MINIMAL_FILES,
     "duplicates.txt": "alpha\nalpha\nbeta\nbeta\ngamma\n",
+    "notes with spaces.txt": (
+        "first spaced line\nsecond spaced line\nthird spaced line\n"
+    ),
 }
 NESTED_FILES = {
-    **MINIMAL_FILES,
-    "docs/guide/readme.txt": "Файл в каталоге третьего уровня.\n",
-    "docs/guide/notes.txt": "одна\nодна\nдве\nдве\nтри\n",
+    **MULTIPLE_FILES,
+    "docs/guide/reference/readme.txt": (
+        "Файл в каталоге третьего уровня.\n"
+    ),
+    "docs/guide/reference/notes.txt": "одна\nодна\nдве\nдве\nтри\n",
 }
-PROFILES = {"minimal": MINIMAL_FILES, "nested": NESTED_FILES}
+PROFILES = {
+    "minimal": MINIMAL_FILES,
+    "multiple": MULTIPLE_FILES,
+    "nested": NESTED_FILES,
+}
 
 
 def parse_args(argv=None):

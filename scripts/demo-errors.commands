@@ -1,6 +1,14 @@
 # Ошибки команд и обработка аргументов в кавычках
+head -n 2 "notes with spaces.txt"
 ls "missing folder"
+cd /missing
+head -n invalid notes.txt
 head missing.txt
+uniq missing.txt
+uname unexpected
+cp notes.txt missing/notes.txt
+cp docs docs/guide/reference/new-copy
+ls "broken
 unknown-command
 ls
 exit

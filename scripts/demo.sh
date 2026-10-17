@@ -8,6 +8,6 @@ trap 'rm -f "$archive_path"' EXIT
 
 cd "$repo_root"
 python3 "$script_dir/create_demo_vfs.py" \
-    --profile minimal --output "$archive_path"
+    --profile multiple --output "$archive_path"
 python3 -m src.cli \
     --vfs "$archive_path" --script "$script_dir/demo.commands"

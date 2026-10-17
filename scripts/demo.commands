@@ -1,9 +1,12 @@
 # Базовые команды варианта 18
 ls
 head -n 2 notes.txt
+head -n 2 "notes with spaces.txt"
 uniq duplicates.txt
 uname
 cd /
 cp notes.txt notes-copy.txt
 head notes-copy.txt
+cp "notes with spaces.txt" "copy with spaces.txt"
+head "copy with spaces.txt"
 exit
